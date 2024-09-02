@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo de Pago de Créditos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input[type="number"], select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            width: 100%;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cálculo de Pago de Créditos</h1>
+        <form id="creditForm">
+            <label for="creditos">Ingrese la cantidad de créditos a pagar:</label>
+            <input type="number" id="creditos" required>
+            
+            <label for="costo">¿Cuál es el costo de cada crédito?</label>
+            <input type="number" id="costo" required>
+            
+            <label for="beca">¿Cuenta con alguna beca?</label>
+            <select id="beca" required>
+                <option value="No">No</option>
+                <option value="Si">Sí</option>
+            </select>
+            
+            <div id="becaInput" style="display: none;">
+                <label for="porcentajeBeca">Ingrese porcentaje decimal de beca:</label>
+                <input type="number" step="0.01" id="porcentajeBeca">
+            </div>
+            
+            <input type="submit" value="Calcular">
+        </form>
+
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('beca').addEventListener('change', function() {
+            var becaInput = document.getElementById('becaInput');
+            becaInput.style.display = this.value === 'Si' ? 'block' : 'none';
+        });
+
+        document.getElementById('creditForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            var creditos = parseInt(document.getElementById('creditos').value);
+            var costo = parseFloat(document.getElementById('costo').value);
+            var beca = document.getElementById('beca').value;
+            var mensualidad, semestre, mensualidadb, semestreb;
+
+            mensualidad = costo * creditos;
+            semestre = mensualidad * 5;
+
+            if (beca === 'Si') {
+                var porcentajeBeca = parseFloat(document.getElementById('porcentajeBeca').value);
+                mensualidadb = mensualidad * (1 - porcentajeBeca);
+                semestreb = mensualidadb * 5;
+                document.getElementById('result').innerHTML = "Sus mensualidades serían de $" + mensualidadb.toFixed(2) + 
+                "<br>Su semestre costaría alrededor de $" + semestreb.toFixed(2);
+            } else {
+                document.getElementById('result').innerHTML = "Sus mensualidades serían de $" + mensualidad.toFixed(2) + 
+                "<br>Su semestre costaría alrededor de $" + semestre.toFixed(2);
+            }
+        });
+    </script>
+</body>
+</html>
